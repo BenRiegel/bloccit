@@ -69,4 +69,18 @@ RSpec.describe Post, type: :model do
       end
     end
   end
+
+  describe "create_vote callback" do
+    it "sets post up_votes to 1" do
+      expect(post.up_votes).to eq(1)
+    end
+    it "triggers create_vote on create" do
+      post = topic.posts.new(title: RandomData.random_sentence, body: RandomData.random_sentence, user: user)
+      expect(post).to receive(:create_vote)
+      post.save!
+    end
+    it "associates the vote with the owner of the post " do
+      expect(post.votes.first.user).to eq(post.user)
+    end
+  end
 end
